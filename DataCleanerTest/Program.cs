@@ -326,113 +326,108 @@ namespace DataCleanerTest
                 Console.WriteLine("AutoCorrectionWhiteSpace");
                 result = result.Replace(" ", "");
             }
-            //Check Phone number format 
-            Reg = new Regex(@"^\[1-9]{1}[0-9]{3,14}$");
 
-            if (!Reg.IsMatch(result))
-            {
-
-                Console.ForegroundColor = ConsoleColor.Blue;
-                
-
-                //Check Phone number Lenght
-                if ( result.Length < 10)
-                {
-
-                    Console.ForegroundColor = ConsoleColor.Red;
-                
-
-                    Console.WriteLine("PhoneNumberHaveMissingPart");
-
-
-                }
-                if (result.Length > 14)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-
-                    Console.WriteLine("PhoneNumberHaveExcessPart");
-                    
-
-                }
-
-
+            
 
                 //Check Phone number FirstChars
 
                 bool isStartingWithAGoodCharacter = false;
-                foreach (string firstChar in PhoneStartsCode)
+            foreach (string firstChar in PhoneStartsCode)
+            {
+                if (result.StartsWith(firstChar))
                 {
-                    if (result.StartsWith(firstChar))
+                    isStartingWithAGoodCharacter = true;
+                    if (result.StartsWith("+90"))
                     {
-                        isStartingWithAGoodCharacter = true;
-                        if (result.StartsWith("+90"))
-                        {
-                            result=result.Substring(3);
-                        }
-                        if (result.StartsWith("90"))
-                        {
-                           result=result.Substring(2);
-                        }
-                        if (result.StartsWith("00"))
-                        {
-                            result=result.Substring(2);
-                        }
-                        if (result.StartsWith("0"))
-                        {
-                            result =result.Substring(1);
-                        }
-                        if (result.StartsWith("9"))
-                        {
-                            result =result.Substring(1);
-                        }
-                        if (result.StartsWith("+"))
-                        {
-                           result= result.Substring(1);
-                        }
-
-
-
-                        Console.WriteLine("AutoCorrection:PhoneNumberToBeThrownTurkishCountryCode");
-                 
-
+                        result = result.Substring(3);
+                    }
+                    if (result.StartsWith("90"))
+                    {
+                        result = result.Substring(2);
+                    }
+                    if (result.StartsWith("00"))
+                    {
+                        result = result.Substring(2);
+                    }
+                    if (result.StartsWith("0"))
+                    {
+                        result = result.Substring(1);
+                    }
+                    if (result.StartsWith("9"))
+                    {
+                        result = result.Substring(1);
+                    }
+                    if (result.StartsWith("+"))
+                    {
+                        result = result.Substring(1);
                     }
 
-                    if (!result.StartsWith(firstChar))
+                    Console.WriteLine("AutoCorrection:PhoneNumberToBeThrownTurkishCountryCode");
+                  
+                }
+
+            
+                else
+
+
+                {
+
+                    if (result.StartsWith("5") && result.Length == 10)
+                    {
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine("PhoneNumberIsaGSM");
+
+
+                    }
+                    if ((!result.StartsWith("5")) && result.Length == 10)
                     {
 
-                        if (result.StartsWith("5") && result.Length == 10)
+                        bool isStartingWithAPrefixCode = false;
+                        foreach (string firstC in PrefixNumbers)
                         {
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.WriteLine("PhoneNumberIsaGSM");
-
-
-                        }
-                        else if ((!result.StartsWith("5")) && result.Length == 10)
-                        {
-
-                            bool isStartingWithAPrefixCode = false;
-                            foreach (string firstC in PrefixNumbers)
+                            if (result.StartsWith(firstC))
                             {
-                                if (result.StartsWith(firstC))
-                                {
-                                    Console.ForegroundColor = ConsoleColor.White;
-                                    Console.WriteLine("PhoneNumberIsaTurkishPrefixTelephone");
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.WriteLine("PhoneNumberIsaTurkishPrefixTelephone");
 
-                                }
                             }
 
                         }
 
                     }
 
+                }
 
 
+
+
+            }
+
+            //Check Phone number Lenght
+            if (result.Length != 10)
+            {
+                if (result.Length < 10)
+                {
+
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("PhoneNumberHaveMissingPart");
+                   
 
                 }
-                
+                if (result.Length > 10)
+                {
+
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("PhoneNumberHaveExcessPart");
+                    Console.WriteLine("Warning:TakeFirst10NumberAndAskForCountryCodeAgain");
+
+                    result= result.Substring(0,10);
+                    
+
+                }
             }
-                  
-           
+
+
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(result);
