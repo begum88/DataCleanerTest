@@ -396,31 +396,40 @@ namespace DataCleanerTest
                  
 
                     }
-                }
-                if (!isStartingWithAGoodCharacter)
-                {
-                 
-                    if (result.StartsWith("5") && result.Length == 10)
+
+                    if (!result.StartsWith(firstChar))
                     {
-                        Console.WriteLine("PhoneNumberIsaGSM");
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
+
+                        if (result.StartsWith("5") && result.Length == 10)
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("PhoneNumberIsaGSM");
+
+
+                        }
+                        else if ((!result.StartsWith("5")) && result.Length == 10)
+                        {
+
+                            bool isStartingWithAPrefixCode = false;
+                            foreach (string firstC in PrefixNumbers)
+                            {
+                                if (result.StartsWith(firstC))
+                                {
+                                    Console.ForegroundColor = ConsoleColor.White;
+                                    Console.WriteLine("PhoneNumberIsaTurkishPrefixTelephone");
+
+                                }
+                            }
+
+                        }
 
                     }
-                    else if( (!result.StartsWith("5")) && result.Length == 10)
-                    {
-                        
 
 
-                    }
-                        
-                    
-                 
-          
-                    
-                   
+
+
                 }
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine("PhoneNumberDoesNotBasicFormat");
+                
             }
                   
            
