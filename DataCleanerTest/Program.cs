@@ -10,7 +10,7 @@ namespace DataCleanerTest
 {
     public class Program
     {
-
+        
         public static List<string> emails = new List<string>()
             {
                 "ozancelik1919@hotmail.com",
@@ -69,14 +69,7 @@ namespace DataCleanerTest
 
 
         };
-        public static List<string> PhoneNumbersCountryCode = new List<string>()
-        {
-
-            "90",
-            "0",
-            "00",
-           
-        };
+       
 
         static List<string> GsmNumbers = new List<string>()
         {
@@ -212,7 +205,7 @@ namespace DataCleanerTest
         };
 
 
-        static List<string> RootDomainNames = new List<string>()
+        static List<string> RootDomainNames= new List<string>()
         {
             "com",
             "com.tr",
@@ -235,27 +228,26 @@ namespace DataCleanerTest
         static List<string> PhoneStartsCode = new List<string>()
         {
             
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
+           
+            "90",
+            "0",
+            "00",
             "9",
-            
+            "+90",
+            "+",
+             "+9",
+
             
 
 
-        };
+        }; 
 
 
         static void Main(string[] args)
         {
             // Check The Email
             //---------------------------------------------------
-            foreach (string email in emails)
+            foreach(string email in emails)
             {
                 CheckEmail(email);
             }
@@ -300,15 +292,15 @@ namespace DataCleanerTest
                 Console.WriteLine("NumberIsNull");
                 return;
             }
-
+            
             // Check - - signs
             //---------------------------------------------------
             if (result.Contains("-"))
             {
-
+         
                 Console.WriteLine("AutoCorrectionHas-Signe");
-                result = result.Replace("-", "");
-
+                result = result.Replace("-","");
+               
 
             }
 
@@ -326,7 +318,7 @@ namespace DataCleanerTest
                 result = result.Split(';').First();
                 result = result.Replace(";", "");
             }
-
+          
             // Check white space
             //---------------------------------------------------
             if (result.Contains(" "))
@@ -341,14 +333,14 @@ namespace DataCleanerTest
             {
 
                 Console.ForegroundColor = ConsoleColor.Blue;
-
+                
 
                 //Check Phone number Lenght
-                if (result.Length < 10)
+                if ( result.Length < 10)
                 {
 
                     Console.ForegroundColor = ConsoleColor.Red;
-
+                
 
                     Console.WriteLine("PhoneNumberHaveMissingPart");
 
@@ -359,7 +351,7 @@ namespace DataCleanerTest
                     Console.ForegroundColor = ConsoleColor.Red;
 
                     Console.WriteLine("PhoneNumberHaveExcessPart");
-
+                    
 
                 }
 
@@ -370,33 +362,72 @@ namespace DataCleanerTest
                 bool isStartingWithAGoodCharacter = false;
                 foreach (string firstChar in PhoneStartsCode)
                 {
-                    if (result.EndsWith(firstChar))
+                    if (result.StartsWith(firstChar))
                     {
                         isStartingWithAGoodCharacter = true;
+                        if (result.StartsWith("+90"))
+                        {
+                            result=result.Substring(3);
+                        }
+                        if (result.StartsWith("90"))
+                        {
+                           result=result.Substring(2);
+                        }
+                        if (result.StartsWith("00"))
+                        {
+                            result=result.Substring(2);
+                        }
+                        if (result.StartsWith("0"))
+                        {
+                            result =result.Substring(1);
+                        }
+                        if (result.StartsWith("9"))
+                        {
+                            result =result.Substring(1);
+                        }
+                        if (result.StartsWith("+"))
+                        {
+                           result= result.Substring(1);
+                        }
+
+
+
+                        Console.WriteLine("AutoCorrection:PhoneNumberToBeThrownTurkishCountryCode");
+                 
+
                     }
                 }
                 if (!isStartingWithAGoodCharacter)
                 {
-                    Console.WriteLine("WarningEmailIsNotStartingWithAGoodCharacter");
-                    Console.WriteLine("AutoCorrectionHas-Signe");
-                    result = result.Replace("+", "");
-                    result = result.Replace("-", "");
-                    //if (result.ToCharArray()[0] == 0 || result.ToCharArray()[1]==0)
-                    //{
-                    //    Console.WriteLine("AutoCorrectionStartsWithZero");
-                    //    result.ToCharArray()[1] = result.ToCharArray()[0] ;
-                    //}
+                 
+                    if (result.StartsWith("5") && result.Length == 10)
+                    {
+                        Console.WriteLine("PhoneNumberIsaGSM");
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
 
+                    }
+                    else if( (!result.StartsWith("5")) && result.Length == 10)
+                    {
+                        
+
+
+                    }
+                        
+                    
+                 
+          
+                    
+                   
                 }
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine("PhoneNumberDoesNotBasicFormat");
             }
-
-
+                  
+           
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(result);
-            Console.WriteLine(" ");
+            Console.WriteLine(" "); 
         }
 
         private static void CheckEmail(string email)
@@ -431,16 +462,16 @@ namespace DataCleanerTest
 
             // Check < > signs
             //---------------------------------------------------
-            if (result.ToCharArray()[0] == '<')
+            if(result.ToCharArray()[0]=='<')
             {
-                // Console.ForegroundColor = ConsoleColor.Red;
+               // Console.ForegroundColor = ConsoleColor.Red;
                 //Console.WriteLine("EmailStartWith<");
                 Console.WriteLine("AutoCorrectionStartWith<");
                 result = result.Replace("<", "");
                 result = result.Replace(">", "");
                 Console.ForegroundColor = ConsoleColor.Green;
-
-
+              
+                
             }
 
 
@@ -468,13 +499,13 @@ namespace DataCleanerTest
                 result = result.Split('(').First();
                 result = result.Replace("(", "");
             }
-
+   
             // Check at sign
             //---------------------------------------------------
 
             if (!result.Contains("@"))
             {
-
+               
                 if (result.Contains("[at]"))
                 {
                     Console.WriteLine("AutoCorrectionAtSign");
@@ -490,7 +521,7 @@ namespace DataCleanerTest
 
 
             // Check e-mail mutliple at sign
-
+            
             //---------------------------------------------------
             Reg = new Regex(@"^([\w\.\-]+)@([\w\.\-]+)$");
             if (!Reg.IsMatch(result))
@@ -499,7 +530,7 @@ namespace DataCleanerTest
                 Console.WriteLine("EmailDoesMutlipleAtSign");
                 Console.WriteLine("AutoCorrectionMultipleAtSign");
                 result = result.Replace("@@", "@");
-
+                
             }
 
             //Check e-mail format 
@@ -509,7 +540,7 @@ namespace DataCleanerTest
 
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("EmailDoesNotBasicFormat");
-
+                
                 if (result.Contains("_"))
                 {
 
@@ -518,10 +549,10 @@ namespace DataCleanerTest
                     result = result.Replace("_", ".");
                 }
 
-
+               
 
             }
-
+             
             // Check white space
             //---------------------------------------------------
             if (result.Contains(" "))
@@ -537,21 +568,21 @@ namespace DataCleanerTest
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("EmailDoesContainUpperCase");
-                // Console.ForegroundColor = ConsoleColor.Gray;
+               // Console.ForegroundColor = ConsoleColor.Gray;
                 //Console.WriteLine("AutoCorrectionUpperCaseToLowerCase");
                 result = result.ToLower();
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(result);
 
             }
-
+         
             //---------------------------------------------------
 
 
 
             // Check non unicode
             Reg = new Regex(@"[^\x00-\x7F]");
-            if (Reg.IsMatch(result))
+            if(Reg.IsMatch(result))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("EmailDoesNotUnicode");
@@ -560,9 +591,9 @@ namespace DataCleanerTest
 
 
             }
+          
 
-
-
+           
 
 
             // Check root domain
@@ -578,7 +609,7 @@ namespace DataCleanerTest
             if (!isEndingWithAGoodRootDomainName)
             {
                 Console.WriteLine("WarningEmailIsNotEndingWithAGoodRootDomainName");
-
+            
             }
 
             // Check domain name
